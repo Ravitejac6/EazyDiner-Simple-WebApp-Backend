@@ -50,24 +50,24 @@ router.post('/user',async (req,res) => {
     }
 });
 
-router.post('/login',async (req,res) => {
+router.post('/login',(req,res) => {
     let user_email = req.body.email;
     let user_password = req.body.password;
-    User.findOne({email:user_email}).then((saved_user) =>{
-        try{
+    User.findOne({email:user_email}).then(async (saved_user) =>{
             if(saved_user == null){
-                return res.json({msg:"user not existed"});
+                res.json({msg:"user not existed"});
             }
-            else if(bcrypt.compare(user_password,saved_user.password)){
-                return res.json({msg:"User existed"});
+            try{
+                if(await bcrypt.compare(user_password,saved_user.password)){
+                    return res.json({msg:"User existed password correct"});
+                }
+                else{
+                    return res.json({msg:"Password Wrong"});
+                }
             }
-            else{
-                res.json({msg:"Password Wrong"});
+            catch{
+                res.json({msg:"Failed to check user re"});
             }
-        }
-        catch{
-            res.json({msg:"Failed to check user re"});
-        }
     });
 
 });

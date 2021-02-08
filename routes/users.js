@@ -59,7 +59,7 @@ router.post('/login',(req,res) => {
             }
             try{
                 if(await bcrypt.compare(user_password,saved_user.password)){
-                    return res.json({msg:"User existed password correct"});
+                    return res.status(200).json({msg:"User existed password correct"});
                 }
                 else{
                     return res.json({msg:"Password Wrong"});
